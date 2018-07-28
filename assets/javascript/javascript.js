@@ -72,6 +72,38 @@ function apiCall(search) {
                 $("#ing" + i).append("<br> " + holder[i][w] + "<br>");
             }
         }
+        $('.searchContent').append(`<div class="col-sm-12 moreResult">SEE 6 MORE RESULTS</div>`)
+
+        firebaseLog()
+
+        // if(database.ref.child().)
+
+        // if (!(searchTrack.includes(search))) {
+        //     searchTrack.push(search);
+        //     objSearch.count = 0;
+        //     objSearch.count += 1;
+        //     console.log(objSearch.count)
+        //     database.ref().child(search).set({
+        //         count: objSearch.count
+        //     })
+        // } else {
+        //     objSearch.count += 1;
+        //     database.ref(search).set({
+        //         count: objSearch.count
+        //     })
+        // }
+        console.log("Firebase Running")
+
+    });
+}
+
+
+//NAVIGATION BAR SEE MORE
+$('.3rd').on('click', '.healthMore', function () { //IMPORTANT FOR THIS; DYNAMICALLY CREATED ITEMS CAN NOT BE CALLED REGULARLY
+    // event.preventDefault();
+
+    var status = $(".subFoot.healthMore").text()
+    if (status === 'SEE MORE') {
         for (let i = 0; i < 6; i++) {
         var title = response.hits[i].recipe.label
         var serve = response.hits[i].recipe.yield
@@ -208,6 +240,7 @@ $("#search").click(function () {
         })
     }
 
+
     console.log(searchTrack);
     console.log(JSON.stringify(search))
     event.preventDefault();
@@ -220,13 +253,41 @@ $("#italian").click(function () {
     event.preventDefault()
     apiCall(search);
 });
+function firebaseLog(search) {
+    // database.ref().on("value", function (snapshot) {
+    //     //something here to call the database infos
+    // });
 
-$("#asian").click(function () {
-    var search = "asian"
-    console.log(search)
-    event.preventDefault()
-    apiCall(search);
-});
+    database.ref().child(search).once("value", function (snapshot) {
+        // var counter = snapshot.val().count()
+        if (snapshot.exists()) {
+            console.log("Exist")
+
+
+        }
+        else {
+            database.ref().child(search).set({
+                count: 1
+            });
+            console.log("Adding Firebase")
+        }
+    });
+
+    // database.ref(search).set({
+    //     count: 2
+    // });
+}
+
+function remove(arr) { //Custom Remove Function for array
+    var what, a = arguments, L = a.length, ax;
+    while (L > 1 && arr.length) {
+        what = a[--L];
+        while ((ax = arr.indexOf(what)) !== -1) {
+            arr.splice(ax, 1);
+        }
+    }
+    return arr;
+}
 
 $("#mexican").click(function () {
     var search = "mexican"
@@ -235,9 +296,8 @@ $("#mexican").click(function () {
     apiCall(search);
 });
 
-$("#thai").click(function () {
-    var search = "thai"
-    console.log(search)
-    event.preventDefault()
-    apiCall(search);
-});
+
+// dataWord() // NEED THIS; RECOMMENT WHEN DONE
+navSetup()
+// firebaseLog()
+// apiCall("rice") // TESTING CALL WIHTOUT TYPING
